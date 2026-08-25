@@ -60,5 +60,5 @@ def draw_building(
         dy.append(dy_dir)
         dz.append(dz_dir)
 
-    ax.bar3d(x1, y1, z1, dx, dy, dz, color=color_map, shade=True)
+    ax.bar3d(x1, y1, z1, dx, dy, dz, color=color_map, shade=True, edgecolor='black',linewidth=0.5)
     plt.show()
