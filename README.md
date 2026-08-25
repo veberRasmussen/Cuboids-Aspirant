@@ -2,11 +2,12 @@
 - Required packages: 
   - `pysat`
   - `networkx` 
+  - `matplotlib` 
 - Optional packages: 
   - `numpy` (used by legacy format builders and translation), 
   - `pulp` (used for alternative to the standard graph coloring functions)
 
- 
+
 **Config:**
 
 All global configuration lives in `config.py`. Overview of the key configurable options:
@@ -74,7 +75,3 @@ Nb. the translator only applies to 3D buildings.
 - make more robust colour map solution, I am thinking a dictionary for the colourmap, to avoid potential ordering issues
 - implement Eilers way of building (trying to break coloring, not reliant on amount of naigbours)
 - Create Ldraw interpreter
-
-
-
-
