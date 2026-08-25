@@ -50,14 +50,14 @@ if __name__ == "__main__":
     print("directions: ", MY_DIRECTIONS)
     print("")
 
-    test_building = create_building(NUMBER_OF_BRICKS,NUMBER_OF_RANDOM_BRICKS, INITIAL_GRID, MY_DIRECTIONS)
-    print("test building is ", test_building)
+    my_test_building = create_building(NUMBER_OF_BRICKS, NUMBER_OF_RANDOM_BRICKS, INITIAL_GRID, MY_DIRECTIONS)
+    print("test building is ", my_test_building)
     print("")
 
-    test_brick_is_tuple(test_building)
-    test_brick_has_correct_length(test_building)
-    test_brick_elements_are_integers(test_building)
-    test_building_is_set(test_building)
+    test_brick_is_tuple(my_test_building)
+    test_brick_has_correct_length(my_test_building)
+    test_brick_elements_are_integers(my_test_building)
+    test_building_is_set(my_test_building)
 
 
 

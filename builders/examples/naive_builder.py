@@ -1,4 +1,4 @@
-from config import MY_DIRECTIONS, BrickDirection, Building, DIMENSION
+from config import MY_DIRECTIONS, BrickDirection, Building, DIMENSION, Brick
 
 
 def naive_builder(
