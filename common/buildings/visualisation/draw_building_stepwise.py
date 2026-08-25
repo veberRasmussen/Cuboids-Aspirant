@@ -90,7 +90,7 @@ def draw_building_stepwise(
                 x_root, y_root, z_root = brick[:3]
                 dx_dir, dy_dir, dz_dir = brick[3:6]
                 ax.bar3d(x_root, y_root, z_root, dx_dir, dy_dir, dz_dir,
-                         color=color_map_sorted[current_step - 1], alpha=1.0, shade=True)
+                         color=color_map_sorted[current_step - 1], alpha=1.0, shade=True, edgecolor='black',linewidth=0.5)
 
                 ax.set_title(f"Brick {current_step}/{len(building_list)} - Press SPACE to continue")
 
