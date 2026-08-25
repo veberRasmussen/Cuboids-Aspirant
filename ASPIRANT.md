@@ -38,18 +38,18 @@
    Run `extract_critical` on the output of one of your builders, and verify that the
    resulting building passes the tests in `connected.py`.
 
-   7. **Remove lonely bricks**
-      Write a function that removes all "lonely" bricks - bricks with no touching
-      neighbours, i.e., isolated nodes in the building's graph.
+7. **Remove lonely bricks**
+   Write a function that removes all "lonely" bricks - bricks with no touching
+   neighbours, i.e., isolated nodes in the building's graph.
 
-      a. Could there still be multiple disconnected *clusters* of more than one brick
-         each, which this approach would miss? Would `connected.py` still pass?
+   a. Could there still be multiple disconnected *clusters* of more than one brick
+      each, which this approach would miss? Would `connected.py` still pass?
 
-      b. Consider approaches to remove entire disconnected components instead of just
-         single bricks. 
+   b. Consider approaches to remove entire disconnected components instead of just
+      single bricks. 
 
-      c. If you keep only the largest component, could this reduce the building's
-         chromatic number? Look at what `extract_critical` does, describe an algorithm that do es not risk reducing the chromatic number, only doing one colouring.
+   c. If you keep only the largest component, could this reduce the building's
+      chromatic number? Look at what `extract_critical` does, describe an algorithm that do es not risk reducing the chromatic number, only doing one colouring.
 
    **Task:** Decide on your own approach, balancing cost against the risk of losing
    structure. Implement it, and justify your choice.
@@ -81,19 +81,34 @@
     about why this works — computers are ultimately deterministic, even AI models like
     GPT.
 
+### Coloring algorithms
+
+12. **Implement a greedy coloring algorithm**
+   Implement a function that takes a building (or its contact graph) and returns a
+   valid coloring using the greedy strategy: process the bricks/nodes in some order,
+   and assign each one the lowest-numbered color not already used by an
+   already-colored neighbour. Verify on a few small buildings that the resulting
+   coloring is valid (no two touching bricks share a color), and compare the number
+   of colors used against the building's known chromatic number, use the provided colouring algorithm.
+
+
+13. **Implement an exact (minimal) coloring algorithm**
+   Implement a function that is *guaranteed* to return a coloring using exactly
+   $\chi(G)$ colors. Test its efficiency on small buildings. 
+
 ### Open-ended
 
-12. **Design your own builder**
+14. **Design your own builder**
     Come up with your own builder idea. Extra credit for ideas that go beyond what's
     already been discussed - for example, but not limited to: colour-aware building,
     e.g., try to "break" a coloruing, enforcing symmetry, or combining
     multiple builders together.
 
-13. **Challenge: find a high-chromatic-number `4x2x1`, `chi=2` building**
+15. **Challenge: find a high-chromatic-number `4x2x1`, `chi=2` building**
     Using a builder of your own design, try to find a building made of `4x2x1` bricks
     (with `chi=2`) whose chromatic number is 6. The smallest such *critical* building
     wins. You can also try optimizing performance for an already working approach, e.g., by introducing caching for `touching_bricks` and `overlapping_bricks`.
 
-14. **Bonus: find any `AxBxC`, `chiX` building requiring 7 or more colours**
+16. **Bonus: find any `AxBxC`, `chiX` building requiring 7 or more colours**
     I have not found such a building myself, nor do I know if one exists. I lean towards
     thinking it does not - but prove me wrong!
