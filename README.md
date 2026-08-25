@@ -1,80 +1,115 @@
-**Setup:**
-- Required packages: 
-  - `pysat`
-  - `networkx` 
-- Optional packages: 
-  - `numpy` (used by legacy format builders and translation), 
-  - `pulp` (used for alternative to the standard graph coloring functions)
+## Tasks
 
- 
-**Config:**
+### Modifying `naive_builder`
 
-All global configuration lives in `config.py`. Overview of the key configurable options:
+1. **Stack → side-by-side placement**
+   Modify `naive_builder` so that instead of stacking bricks vertically (along the
+   z-axis), it places them side by side along the x- or y-axis.
 
-- **`CANONICAL_DIRECTION`** — the base brick shape (e.g. `(2, 1, 1)`), given as a tuple
-  of side lengths. `DIMENSION` (number of axes) is derived automatically from its length,
-  so switching to a 2D or 4D+ setup just means using a shorter/longer tuple here.
-- **`CHI`** — the number of axes that are permuted to generate brick orientations
-  (used together with `CANONICAL_DIRECTION` in `MY_DIRECTIONS`, see below).
-- **`DEFAULT_GRID_SIZE`**, **`DEFAULT_NUM_BRICKS`**, **`DEFAULT_NUM_RANDOM_INIT`** —
-  default parameters for building generation (grid size, total number of bricks,
-  and number of initial randomly-placed bricks).
-- **`STORAGE_PATH`** — folder used to store/load buildings on disk.
-- **`COLORS`** — palette used when visualising/colouring buildings.
-- **`ALL_DIRECTIONS`** / **`MY_DIRECTIONS`** — derived sets of legal brick orientations:
-  - `ALL_DIRECTIONS` contains *every* permutation of `CANONICAL_DIRECTION`.
-  - `MY_DIRECTIONS` contains only the permutations of the first `CHI` axes
-    (via `limited_permutations`), which is the direction set used by default
-    throughout the project.
+2. **"I forbandt" wall building**
+   Modify `naive_builder` to build a wall using a running-bond pattern, where each row
+   is offset from the row below it. Use nested loops (outer loop over rows, inner loop
+   over bricks within a row). Think about how to break out of both loops once
+   `number_of_bricks` has been reached.
 
-Additionally, `active_builder_config.py` controls **which builder implementation** is
-used when `create_building(...)` is called — set the `ACTIVE_BUILDER` variable there to
-switch between available builders (e.g. `empire_strikes_builder`).
+3. **Generalize `naive_builder` to more dimensions**
+   Modify `naive_builder` so it works for any `dimension`, not just 3D. Look at how
+   `CANONICAL_BRICK` is constructed in `config.py` for inspiration on how to build a
+   `Brick` tuple generically, regardless of dimension.
 
-**Note on `active_builder_config.py`:** its `create_building(...)` wrapper only forwards
-the fixed parameter set `(number_of_bricks, number_random_bricks, grid_size, directions,
-dimension)`. It is entirely possible to write a sensible builder that takes additional or
-different parameters - but such a builder cannot be plugged in through `ACTIVE_BUILDER`
-without modification *(you can still use it if you leave out one or more of the parameters)*. Do not rely on `active_builder_config.py` to support arbitrary
-builder signatures; instead, call/wire up such builders directly wherever they are used.
+### Modifying `random_builder`
 
-**Local configuration overrides:**
+4. **Guarantee requested brick count**
+   Modify `random_builder` so it reaches exactly the `number_of_bricks` input, even when
+   the grid is nearly full. One approach could be to start with a small local grid size
+   and successively grow it if placement attempts keep failing, rather than using a
+   single fixed `grid_size` throughout.
 
-For local experimentation (e.g. testing a different brick shape, grid size, or builder),
-either:
+5. **Speed up overlap checking with a hash map**
+   `random_builder` currently checks each new candidate brick against every existing
+   brick individually — an O(n) operation per candidate (look up Big-O notation if
+   you're unfamiliar). Improve this by maintaining a set or hash map of occupied cells
+   instead, so overlap checks become O(1). Hint: look at
+   `place_random_non_touching_bricks.py` for inspiration.
 
-1. Edit the relevant constants directly in `config.py` / `active_builder_config.py`, or
-2. Override values at the call site — it is the preferred pattern:
-   when writing new builders or utility functions, favour accepting these kinds of
-   parameters explicitly (with sensible defaults from `config.py`) rather than reading
-   global config values directly, so that callers can always override behaviour locally
-   without needing to modify shared configuration.
+### Connectivity and post-processing
 
-**Visualization:**
-The visualization tool `draw_building`only support **3D**
-buildings — attempting to visualize a building created with a `dimension` other than 3
-will raise an error. The tool `draw_graph` works for other dimensions as well. 
+6. **Pass the connectivity test using `extract_critical`**
+   Run `extract_critical` on the output of one of your builders, and verify that the
+   resulting building passes the tests in `connected.py`.
 
-**Legacy Formats:**
-Earlier versions of this project represented buildings as NumPy arrays of **corners**,
-while the current implementation represents buildings as **sets of tuples** using a
-**root + direction** encoding. In *Cuboids/common/legacy/translation.py* there is a
-converter from the old format to the new.
-\
-Nb. the translator only applies to 3D buildings.
+   7. **Remove lonely bricks**
+      Write a function that removes all "lonely" bricks - bricks with no touching
+      neighbours, i.e., isolated nodes in the building's graph.
+
+      a. Could there still be multiple disconnected *clusters* of more than one brick
+         each, which this approach would miss? Would `connected.py` still pass?
+
+      b. Consider approaches to remove entire disconnected components instead of just
+         single bricks. 
+
+      c. If you keep only the largest component, could this reduce the building's
+         chromatic number? Look at what `extract_critical` does, describe an algorithm that do es not risk reducing the chromatic number, only doing one colouring.
+
+   **Task:** Decide on your own approach, balancing cost against the risk of losing
+   structure. Implement it, and justify your choice.
+
+### Improving the greedy builder
+
+8. **Speed up the greedy builder with hash maps**
+   Apply the same idea as in the `random_builder` overlap-checking task above: replace
+   direct overlap/touching comparisons with hash map or set-based lookups, and measure
+   the speedup.
+
+9. **Prioritize high connectivity**
+   Modify the greedy builder so that, when choosing the next brick to place, it
+   prioritizes candidates that will maximize the building's connectivity (e.g. number of
+   touching neighbours), rather than picking arbitrarily among valid candidates.
+
+### Working with the wider pipeline
+
+10. **Wire your builder into the test suite and execution scripts**
+    Try running your builder through the existing tests and execution scripts. If your
+    builder uses a different parameter signature than the ones supported by
+    `active_builder_config.py`, you will need to adapt the tests/scripts accordingly
+    rather than relying on the config as-is (see the note on its
+    limitations in the README).
+
+11. **Add reproducible randomness via a seed**
+    Add a `seed` parameter to a builder that uses randomness, and verify that running it
+    twice with the same seed produces an identical building. Take a moment to think
+    about why this works — computers are ultimately deterministic, even AI models like
+    GPT.
 
 
+### Coloring algorithms
 
-**TO DO:**
-- Refractor legacy code into this repo (including but not restricted to)
-  - Dimers 5 clique program (make clear distinction from colouruing issues, consider using other REPO)
-  - Make inherited coloring in this repo
-  - Make finite grid coloring in this repo
-
-- make more robust colour map solution, I am thinking a dictionary for the colourmap, to avoid potential ordering issues
-- implement Eilers way of building (trying to break coloring, not reliant on amount of naigbours)
-- Create Ldraw interpreter
-
+12. **Implement a greedy coloring algorithm**
+   Implement a function that takes a building (or its contact graph) and returns a
+   valid coloring using the greedy strategy: process the bricks/nodes in some order,
+   and assign each one the lowest-numbered color not already used by an
+   already-colored neighbour. Verify on a few small buildings that the resulting
+   coloring is valid (no two touching bricks share a color), and compare the number
+   of colors used against the building's known chromatic number, use the provided colouring algorithm.
 
 
+13. **Implement an exact (minimal) coloring algorithm**
+   Implement a function that is *guaranteed* to return a coloring using exactly
+   $\chi(G)$ colors. Test its efficiency on small buildings. 
 
+### Open-ended
+
+14. **Design your own builder**
+    Come up with your own builder idea. Extra credit for ideas that go beyond what's
+    already been discussed - for example, but not limited to: colour-aware building,
+    e.g., try to "break" a coloruing, enforcing symmetry, or combining
+    multiple builders together.
+
+15. **Challenge: find a high-chromatic-number `4x2x1`, `chi=2` building**
+    Using a builder of your own design, try to find a building made of `4x2x1` bricks
+    (with `chi=2`) whose chromatic number is 6. The smallest such *critical* building
+    wins. You can also try optimizing performance for an already working approach, e.g., by introducing caching for `touching_bricks` and `overlapping_bricks`.
+
+16. **Bonus: find any `AxBxC`, `chiX` building requiring 7 or more colours**
+    I have not found such a building myself, nor do I know if one exists. I lean towards
+    thinking it does not - but prove me wrong!

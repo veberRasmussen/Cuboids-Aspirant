@@ -1,7 +1,6 @@
 from active_builder_config import create_building
 from common.buildings.visualisation.draw_building import draw_building
 from common.coloring_engine.satisfiability.colour_building import colour_building
-from common.coloring_engine.linear_programming.colour_building_lp import colour_building_lp
 from config import MY_DIRECTIONS
 from common.graphs.draw_graph import draw_graph
 from common.graphs.graph_from_building import graph_from_building
