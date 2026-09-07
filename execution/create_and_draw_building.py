@@ -13,7 +13,7 @@ from common.buildings.extract_critical import extract_critical
 # ============================================================================
 MAKE_CRITICAL = False
 DRAW_GRAPH = False
-NUMBER_OF_BRICKS = 200
+NUMBER_OF_BRICKS = 100
 NUMBER_OF_RANDOM_BRICKS = 4
 INITIAL_GRID = 10
 # ============================================================================
