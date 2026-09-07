@@ -1,12 +1,33 @@
-**Setup:**
-- Required packages: 
-  - `pysat`
-  - `networkx` 
-  - `matplotlib` 
-- Optional packages: 
-  - `numpy` (used by legacy format builders and translation), 
-  - `pulp` (used for alternative to the standard graph coloring functions)
+# Cuboids
 
+A Python project for generating, analysing, colouring, and visualising
+buildings made from congruent cuboids.
+
+The current implementation uses a **root + direction** representation for
+bricks and buildings, and supports arbitrary dimensions at the data-structure
+level. Some visualization and legacy tools are limited to 3D.
+
+
+---
+
+## Setup
+
+Required packages:
+
+- `python-sat` — SAT-based graph colouring
+- `networkx` — graph representation and manipulation
+- `matplotlib` — visualization
+
+Optional packages:
+
+- `pulp` — alternative linear-programming based graph colouring
+- `numpy` — used by some legacy code and translations
+
+Install the main dependencies with, for example:
+
+```bash
+pip install python-sat networkx matplotlib
+```
 
 **Config:**
 
