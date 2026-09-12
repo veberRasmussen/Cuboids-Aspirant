@@ -7,7 +7,6 @@ The current implementation uses a **root + direction** representation for
 bricks and buildings, and supports arbitrary dimensions at the data-structure
 level. Some visualization and legacy tools are limited to 3D.
 
-
 ---
 
 ## Setup
@@ -17,11 +16,6 @@ Required packages:
 - `python-sat` — SAT-based graph colouring
 - `networkx` — graph representation and manipulation
 - `matplotlib` — visualization
-
-Optional packages:
-
-- `pulp` — alternative linear-programming based graph colouring
-- `numpy` — used by some legacy code and translations
 
 Install the main dependencies with, for example:
 
@@ -76,23 +70,3 @@ either:
 The visualization tool `draw_building`only support **3D**
 buildings — attempting to visualize a building created with a `dimension` other than 3
 will raise an error. The tool `draw_graph` works for other dimensions as well. 
-
-**Legacy Formats:**
-Earlier versions of this project represented buildings as NumPy arrays of **corners**,
-while the current implementation represents buildings as **sets of tuples** using a
-**root + direction** encoding. In *Cuboids/common/legacy/translation.py* there is a
-converter from the old format to the new.
-\
-Nb. the translator only applies to 3D buildings.
-
-
-
-**TO DO:**
-- Refractor legacy code into this repo (including but not restricted to)
-  - Dimers 5 clique program (make clear distinction from colouruing issues, consider using other REPO)
-  - Make inherited coloring in this repo
-  - Make finite grid coloring in this repo
-
-- make more robust colour map solution, I am thinking a dictionary for the colourmap, to avoid potential ordering issues
-- implement Eilers way of building (trying to break coloring, not reliant on amount of naigbours)
-- Create Ldraw interpreter
