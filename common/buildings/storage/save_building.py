@@ -1,15 +1,10 @@
 from pathlib import Path
 from datetime import datetime
 from common.coloring_engine.satisfiability.colour_building import colour_building
+from common.buildings.storage.storage import ensure_storage_dir
 from config import (
-    CANONICAL_DIRECTION, CHI, Building, STORAGE_PATH, Colouring
+    CANONICAL_DIRECTION, CHI, Building, STORAGE_PATH
 )
-
-
-def ensure_storage_dir():
-    """Create storage directory if it doesn't exist."""
-    STORAGE_PATH.mkdir(parents=True, exist_ok=True)
-
 
 def generate_filename(chromatic_number: int, size_building: int) -> str:
     """
@@ -75,27 +70,3 @@ def save_building(
 
     print(f"Saved to: {filename}")
     return filename
-
-
-def save_colouring(
-        filename: str,
-        colouring: Colouring,
-) -> str:
-    """
-    Save colouring to text file.
-
-    Args:
-        filename: Base filename (without extension)
-        colouring: The colouring tuple to save
-
-    Returns:
-        The filename used
-    """
-    ensure_storage_dir()
-
-    colouring_path = STORAGE_PATH / f"{filename}_colour.txt"
-    with open(colouring_path, 'w') as f:
-        f.write(f"{colouring}")
-
-    print(f"Saved to: {filename}_colour")
-    return f"{filename}_colour.txt"

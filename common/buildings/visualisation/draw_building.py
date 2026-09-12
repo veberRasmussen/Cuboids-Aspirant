@@ -1,16 +1,17 @@
-from common.buildings.move_to_origin import move_building_to_origin
-from config import ColourMap, Building
+from config import ColourMap
 
 import matplotlib.pyplot as plt
 
 
 def draw_building(
-        building: Building,
-        color_map: ColourMap,
-        grid: int = 10):
-    """Draw entire building at once with auto-scaled cubic grid."""
+        colour_map: ColourMap
+):
+    """Draw a coloured building with automatically scaled axes."""
+
+    building = colour_map.keys()
+
     # Check that building is 3D
-    if building:
+    if colour_map:
         first_brick = next(iter(building))
         brick_length = len(first_brick)
 
@@ -24,41 +25,62 @@ def draw_building(
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # Calculate grid bounds with 10% slack
-    if building:
-        building_list = list(building)
-        min_coords = [min(brick[i] for brick in building_list) for i in range(3)]
-        max_coords = [max(brick[i] + brick[3 + i] for brick in building_list) for i in range(3)]
+    # Calculate bounds with 10% slack
+    if colour_map:
+        min_coords = [
+            min(brick[i] for brick in building)
+            for i in range(3)
+        ]
 
-        # Find the maximum extent
-        max_extent = max(max_coords[i] - min_coords[i] for i in range(3))
+        max_coords = [
+            max(brick[i] + brick[3 + i] for brick in building)
+            for i in range(3)
+        ]
 
-        # Add 10% slack
+        max_extent = max(
+            max_coords[i] - min_coords[i]
+            for i in range(3)
+        )
+
         slack = max_extent * 0.1
 
         grid_min = min(min_coords) - slack
         grid_max = max(max_coords) + slack
+
     else:
         grid_min = 0
-        grid_max = grid
+        grid_max = 10
 
     ax.set_xlim(grid_min, grid_max)
     ax.set_ylim(grid_min, grid_max)
     ax.set_zlim(grid_min, grid_max)
 
-    # Extract coordinates and directions
-    x1, y1, z1, dx, dy, dz = [], [], [], [], [], []
+    # Extract coordinates and colours
+    x1, y1, z1 = [], [], []
+    dx, dy, dz = [], [], []
+    colours = []
 
-    for brick in building:
+    for brick, colour in colour_map.items():
         x_root, y_root, z_root = brick[:3]
         dx_dir, dy_dir, dz_dir = brick[3:6]
 
         x1.append(x_root)
         y1.append(y_root)
         z1.append(z_root)
+
         dx.append(dx_dir)
         dy.append(dy_dir)
         dz.append(dz_dir)
 
-    ax.bar3d(x1, y1, z1, dx, dy, dz, color=color_map, shade=True, edgecolor='black',linewidth=0.5)
+        colours.append(colour)
+
+    ax.bar3d(
+        x1, y1, z1,
+        dx, dy, dz,
+        color=colours,
+        shade=True,
+        edgecolor='black',
+        linewidth=0.1
+    )
+
     plt.show()

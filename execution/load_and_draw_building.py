@@ -27,13 +27,12 @@ def main():
         # Compute coloring
         print(f"\nComputing optimal coloring...")
         colouring = colour_building(building)
-        chromatic_number = colouring[0]
-        color_map = colouring[1]
+        chromatic_number, color_map = colouring
         print(f"✓ Chromatic number: {chromatic_number}")
 
         # Visualize
         print(f"\nDrawing building...")
-        draw_building(building, color_map)
+        draw_building(color_map)
 
         print("\n" + "=" * 70)
         print("Complete!")

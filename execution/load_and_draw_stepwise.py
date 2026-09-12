@@ -26,14 +26,13 @@ def main():
         # Compute coloring
         print(f"\nComputing optimal coloring...")
         colouring = colour_building(building)
-        chromatic_number = colouring[0]
-        color_map = colouring[1]
+        chromatic_number, color_map = colouring
         print(f"✓ Chromatic number: {chromatic_number}")
 
         # Visualize step-by-step
         print(f"\nStarting step-by-step visualization...")
         print(f"Press SPACE to advance to next brick\n")
-        draw_building_stepwise(building, color_map)
+        draw_building_stepwise(color_map)
 
         print("\n" + "=" * 70)
         print("Complete!")
