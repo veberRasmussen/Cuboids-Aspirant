@@ -1,7 +1,6 @@
 import time
-from builders.empire_strikes_builder.builder import create_building as empire_strikes_builder
-from builders.return_of_the_builder.builder import create_building as return_of_the_builder
-#from builders.new_hope_builder.builder import create_building as new_hope_builder
+from builders.examples.naive_builder import naive_builder as naive_builder
+from builders.examples.greedy_builder.greedy_builder import greedy_builder as greedy_builder
 from config import MY_DIRECTIONS
 
 
@@ -14,9 +13,8 @@ TEST_RUNS = [5, 10, 50, 100, 200, 300, 400, 500]
 RUNS_PER_TEST = 10
 
 builders = {
-#    "New Hope Builder": new_hope_builder,
-    "Empire Strikes Builder": empire_strikes_builder,
-    "Return of the Builder": return_of_the_builder
+    "Greedy Builder": greedy_builder,
+    "Naive Builder": naive_builder
 }
 # ============================================================================
 

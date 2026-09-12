@@ -13,7 +13,7 @@ from common.buildings.extract_critical import extract_critical
 # ============================================================================
 MAKE_CRITICAL = False
 DRAW_GRAPH = False
-NUMBER_OF_BRICKS = 100
+NUMBER_OF_BRICKS = 50
 NUMBER_OF_RANDOM_BRICKS = 4
 INITIAL_GRID = 10
 # ============================================================================
@@ -34,21 +34,20 @@ def main():
         INITIAL_GRID,
         MY_DIRECTIONS
     )
-    print(f"✓ Building created with {len(building)} bricks")
+    print(f"Building created with {len(building)} bricks")
 
     # Extract critical if requested
     if MAKE_CRITICAL:
         print("\nExtracting critical building...")
         building = extract_critical(building)
-        print(f"✓ Critical building has {len(building)} bricks")
+        print(f"Critical building has {len(building)} bricks")
 
     # Compute coloring
     print("\nComputing coloring...")
     colouring = colour_building(building)
-    chromatic_number = colouring[0]
-    color_map = colouring[1]
-    print(f"✓ Chromatic number: {chromatic_number}")
-    print(f"✓ Colour map: {color_map}")
+    chromatic_number, color_map = colouring
+    print(f"Chromatic number: {chromatic_number}")
+    print(f"Colour map: {color_map}")
 
     print("\n" + "=" * 70)
     print("VISUALIZATION")
@@ -56,7 +55,7 @@ def main():
 
     # Draw building
     print("\nDrawing 3D building...")
-    draw_building(building, color_map)
+    draw_building(color_map)
 
     if DRAW_GRAPH:
         # Draw graph

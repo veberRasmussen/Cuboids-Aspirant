@@ -4,10 +4,10 @@ from pathlib import Path
 """Global configuration parameters."""
 
 # Canonical setup
-#CANONICAL_DIRECTION = (4, 2, 1)
-CANONICAL_DIRECTION = (2, 1, 1)
+CANONICAL_DIRECTION = (4, 2, 1)
+#CANONICAL_DIRECTION = (2, 1, 1)
 DIMENSION:int = len(CANONICAL_DIRECTION)
-CHI = 3
+CHI = 2
 CANONICAL_BRICK = (0,) * DIMENSION + CANONICAL_DIRECTION
 
 # Grid and building defaults
@@ -24,8 +24,9 @@ Brick = tuple[int, ...]
 BrickDirection = tuple[int, ...]
 Building = set[Brick]
 TouchingType = str
-ColourMap = list[str]
-Colouring = [int,ColourMap]
+Colour = str
+ColourMap = dict[Brick, Colour]
+Colouring = tuple[int, ColourMap]
 
 
 # Touching type constants

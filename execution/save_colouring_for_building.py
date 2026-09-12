@@ -1,11 +1,10 @@
 # execution/extract_and_save_critical.py
 """Load building, extract critical bricks, and save."""
 
-import re
 from pathlib import Path
 from common.buildings.storage.load_building import load_building
 from common.coloring_engine.satisfiability.colour_building import colour_building
-from common.buildings.storage.save_building import save_colouring
+from common.buildings.storage.save_colouring import save_colouring
 
 
 def main():

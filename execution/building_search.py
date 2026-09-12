@@ -10,11 +10,11 @@ from config import MY_DIRECTIONS
 # ============================================================================
 # CONFIGURATION
 # ============================================================================
-NUMBER_OF_BRICKS = 10000
-NUMBER_OF_RANDOM_BRICKS = 30
-INITIAL_GRID = 20
-CHROMATIC_NUMBER_GOAL = 6
-MAX_ATTEMPTS = 1000
+NUMBER_OF_BRICKS = 50
+NUMBER_OF_RANDOM_BRICKS = 3
+INITIAL_GRID = 10
+CHROMATIC_NUMBER_GOAL = 4
+MAX_ATTEMPTS = 100
 # ============================================================================
 
 def find_building_with_chromatic_goal():
@@ -55,7 +55,7 @@ def find_building_with_chromatic_goal():
 
             if brick_length == 6: # only allowed to use draw building for 3D
                 print("Drawing building...")
-                draw_building(building_temp, colouring_temp[1])
+                draw_building(colouring_temp[1])
 
             return
 
