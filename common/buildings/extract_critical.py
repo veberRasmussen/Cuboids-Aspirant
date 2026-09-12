@@ -6,33 +6,29 @@ from common.graphs.graph_from_building import graph_from_building
 import networkx as nx
 import itertools
 
+
 def extract_critical(
         building: Building
 ) -> Building:
 
-    building_list = list(building)
-    n_bricks = len(building_list)
+    chrom = colour_building(building, 1)[0]
 
-    chrom = colour_building(building_list, 1)[0]
-
-    # Iterate backwards to safely remove bricks
-    for i in range(n_bricks - 1, -1, -1):
-        candidate_building = building_list[:i] + building_list[i + 1:]
+    for brick in building.copy():
+        candidate_building = building - {brick}
         chrom_temp = colour_building(candidate_building, chrom - 1)[0]
 
         if chrom_temp == chrom:
             # Brick is insignificant, remove it
-            building_list = candidate_building
+            building = candidate_building
 
-    return tuple(building_list)
+    return building
 
 
 def extract_critical_fast(
         building: Building
 ) -> Building:
 
-    building_list = list(building)
-    graph = graph_from_building(building_list)
+    graph = graph_from_building(building)
 
     # Compute chromatic number once
     chrom = colour_graph(graph, 1)[0]
@@ -44,12 +40,19 @@ def extract_critical_fast(
 
     # Keep only nodes that belong to at least one maximum clique
     significant_nodes = set(itertools.chain.from_iterable(max_cliques))
-    new_building = [brick for i, brick in enumerate(building_list) if i in significant_nodes]
 
-    return tuple(new_building)
+    return {
+        brick
+        for brick in building
+        if brick in significant_nodes
+    }
 
 
-def extract_critical_combined(building: Building) -> Building:
+def extract_critical_combined(
+        building: Building
+) -> Building:
+
     fast_filtered = extract_critical_fast(building)
     refined = extract_critical(fast_filtered)
+
     return refined
